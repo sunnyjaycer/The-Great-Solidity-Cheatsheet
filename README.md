@@ -10,7 +10,7 @@ The Solidity cheat sheet we've always needed upkept by a forgetful blockchain en
 calls to your contract. Think of it like your computer's hard disk vs RAM.
 
 ```
-function example(string memory _)
+function example(string memory _) public { ... }
 ```
 
 ```storage```
@@ -123,7 +123,7 @@ tbd
 
 ## Conditionals
 
-```Require```
+```require```
 
 *Makes it so that the function will throw an error and stop executing if some condition is not true*
 
@@ -132,3 +132,16 @@ Implementation:
 // Example:
 require(ownerZombieCount[msg.sender] == 0);
 ```
+
+## Functions
+
+**Header format**
+
+```
+function <functionName>( <parameterType><parameterName>, <parameterType><parameterName>, ...) <visibility> <functionModifier> returns (<return type>) {...}
+```
+- Not required
+    - Returns clause
+    - Function modifier (view, pure)
+
+**Function modifiers**
