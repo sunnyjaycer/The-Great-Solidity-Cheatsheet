@@ -1,4 +1,4 @@
-# The Great Solidity Cheatsheet
+# The Great Solidity Cheatsheet (under construction 🚧)
 The Solidity cheat sheet we've always needed upkept by a forgetful blockchain engineer 😋
 
 ## Data Locations
@@ -18,8 +18,35 @@ function example(string memory _) public { ... }
 - Most of the time you don't need to use these keywords because Solidity handles them by default. State variables (variables declared outside of functions) are by default storage and written permanently to the blockchain, while variables declared inside functions are memory and will disappear when the function call ends.
     - You will want to use them when dealing with structs and arrays
 
+## Accessing another contract in your code
 
-## Visibility
+First make sure you have the contract/contract's interface imported in your code
+
+```
+// Inside contract
+
+ExampleContract variable_name = ExampleContract(example_contract_address);
+
+// Before contract 
+
+import { ExampleContract } from "url...";
+
+// Or the contract could be already written in your directory/.sol file
+```
+
+
+## Inheritance & Visibility
+
+**Inheritance**
+
+Note: contract from which other contracts inherit features is known as a base contract, while the contract which inherits the features is called a derived contract
+
+```
+// Example - (derived contract) BabyDoge inherits (base contract) Doge functionality
+contract BabyDoge is Doge {...}
+```
+
+**Visibility**
 
 ```Public```
 
@@ -31,7 +58,7 @@ Can be used only inside its own contract (not outside in an inheriting contract)
 
 ```Internal```
 
-Same as private, except that it's also accessible to contracts that inherit from this contract
+Same as private, except that it's also accessible to contracts that inherit from this contract. The difference to public is that say a contract inheriting this contract was inherited in a whole other contract - that contract would be unable to use the internal function.
 
 ```External```
 
@@ -96,6 +123,10 @@ unsigned int - allows wider range of positive numbers, computational efficiency
 
 signed int, can be + or -
 
+```address```
+
+Holds a contract or wallet address in checksum format
+
 ## Other
 
 **Variable Naming Conventions**
@@ -138,10 +169,100 @@ require(ownerZombieCount[msg.sender] == 0);
 **Header format**
 
 ```
-function <functionName>( <parameterType><parameterName>, <parameterType><parameterName>, ...) <visibility> <functionModifier> returns (<return type>) {...}
+function <functionName>( <parameterType><parameterName>, <parameterType><parameterName>, ...) <visibility> <functionModifier> returns (<return type><return varName>, <return type><return varName>, ...) {...}
 ```
 - Not required
     - Returns clause
     - Function modifier (view, pure)
 
+**Handling Multiple Returns**
+
+Use the commas to acquire the proper return items positionally
+
+```
+function multipleReturns() internal returns (uint a, uint b, uint c) {
+    return (1,2,3);
+}
+
+function getLastOfThree() internal returns (uint a) {
+    uint c;
+
+    // sets c equal to 3
+    (,,c) = multipleReturns();
+}
+```
+
 **Function modifiers**
+
+```view```
+
+Only viewing the data but not modifying it
+
+```pure```
+
+Not even accessing any data in the app, just does something like an arbitrary 5+5
+
+## Events
+
+An event is a way that DApps can get information at a specific point during smart contract (EVM) code execution. Whenever the EVM encounters a LOG opcode, Ethereum nodes emit an event that DApps and external processes can be notified of and access
+
+```
+// Initializing event object (what the event should contain when emitted)
+event IntegersAdded(uint x, uint y, uint result);
+
+// Emitting event
+emit IntegersAddded(2, 2, 4)
+```
+
+## OpenZepplin Essentials
+
+Some popular imports 
+
+```
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+```
+
+## Interfaces
+
+By including an interface in our contract's code your contract knows what the other contract's functions look like, how to call them, and what sort of response to expect.
+
+**Format:** 
+
+Same as function header, but no curly braces or any definitions
+
+```
+// Interface example
+
+contract NumberInterface {
+  function getNum(address _myAddress) public view returns (uint);
+}
+```
+	
+**Using an interface in another contract**
+	
+1. Define address of the actual contract you're interfacing with in a variable
+2. [NameOfInterfaceContract] [variableName] = [NameOfInterfaceContract](address-containing variable from step 1.)
+
+**Calling it**
+
+Using the interface example in another contract
+
+```
+contract MyContract {
+  address NumberInterfaceAddress = 0xab38... 
+  // ^ The address of the FavoriteNumber contract on Ethereum
+  NumberInterface numberContract = NumberInterface(NumberInterfaceAddress);
+  // Now `numberContract` is pointing to the FavoriteNumber contract
+  // *NumberInterface is from the code block example under Format
+
+  function someFunction() public {
+    // Now we can call the `getNum` function from the FavoriteNumber contract:
+    uint num = numberContract.getNum(msg.sender);
+    // ...and do something with `num` here
+  }
+}
+```
