@@ -147,6 +147,19 @@ constructor(uint256 _totalSupply) public {
 // There, calling the parameter totalSupply would shadow the existing state variable totalSupply, so the leading underscore is used to avoid the naming collision.
 ```
 
+**For Loops**
+
+```
+for (initialize loop counter; check and test the counter; increase the value of counter;) {
+ Execute multiple instructions here
+}
+
+uint len;
+for (j = _i; j != 0; j /= 10) {  //for loop example
+ len++;         
+}
+```
+
 ## Message dot
 
 ```msg.sender```
