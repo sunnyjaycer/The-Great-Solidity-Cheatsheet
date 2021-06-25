@@ -154,9 +154,8 @@ for (initialize loop counter; check and test the counter; increase the value of 
  Execute multiple instructions here
 }
 
-uint len;
-for (j = _i; j != 0; j /= 10) {  //for loop example
- len++;         
+for (uint i=0; i<studentList.length; i++) {
+    emit LogStudentGrade(studentList[i], studentStructs[studentList[i]].grade);
 }
 ```
 
