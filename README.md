@@ -78,6 +78,11 @@ Appending:
 
 ```zombies.push(Zombie(_name, _dna));```
 
+Deleting an item
+
+```delete array[index];```
+*This will leave an empty gap in the array, not collapse the array into the deleted item*
+
 Note: storing indexable data
 
 **Mapping**
