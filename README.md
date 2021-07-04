@@ -119,18 +119,25 @@ Note: useful custom data structure that can be stored in volume
 
 ## Data Types
 
-```uint```
-
 unsigned int - allows wider range of positive numbers, computational efficiency
     ○ It's an alias for uint256 (they're the same thing)
 
-```int```
+```uint```
 
 signed int, can be + or -
 
-```address```
+```int```
 
 Holds a contract or wallet address in checksum format
+
+```address```
+
+Dealing uint/int type conflicts can be done with the below. However beware, if you accidentally cast a negative int to a uint, it will create an astronomically large number. You only want to do this for positive ints you're trying to cast to uints.
+
+```
+( ,int96 flowRate, , ) = _cfa.getFlow(depositToken, flowSender, address(this));
+depositFlowRate = uint(int(flowRate));
+```
 
 ## Other
 
